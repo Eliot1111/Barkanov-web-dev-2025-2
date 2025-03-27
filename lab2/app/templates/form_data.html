@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Параметры формы</h1>
+  <form method="post">
+    <div class="mb-3">
+      <label for="inputData" class="form-label">Введите данные</label>
+      <input type="text" class="form-control" id="inputData" name="data">
+    </div>
+    <button type="submit" class="btn btn-primary">Отправить</button>
+  </form>
+  {% if form_data %}
+    <h2>Полученные параметры формы:</h2>
+    <ul>
+      {% for key, value in form_data.items() %}
+        <li><strong>{{ key }}:</strong> {{ value }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

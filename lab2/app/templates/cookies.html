@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Cookie</h1>
+  {% if cookie_value %}
+    <p>Cookie "mycookie" было установлено ранее и теперь удалено.</p>
+  {% else %}
+    <p>Cookie "mycookie" не было установлено. Оно установлено сейчас.</p>
+  {% endif %}
+{% endblock %}

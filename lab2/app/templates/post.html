@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="post mb-5">
+    <h1 class="mb-3">{{ post.title }}</h1>
+    <div class="post-meta mb-3 text-muted">
+      Опубликовано {{ post.date.strftime('%d.%m.%Y') }} | Автор: {{ post.author }}
+    </div>
+    <div class="post-image mb-4">
+      <img src="{{ url_for('static', filename='images/' + post.image_id) }}" class="img-fluid" alt="Изображение поста">
+    </div>
+    <div class="post-content">
+      <p>{{ post.text }}</p>
+    </div>
+  </div>
+
+  <div class="comments-section mb-5">
+    <h3>Комментарии</h3>
+    {% for comment in post.comments %}
+      <div class="comment mb-4 p-3 border rounded">
+        <p class="mb-1"><strong>{{ comment.author }}</strong>:</p>
+        <p class="mb-2">{{ comment.text }}</p>
+        {% if comment.replies %}
+          <div class="replies ms-4">
+            {% for reply in comment.replies %}
+              <div class="reply mb-2 p-2 border rounded">
+                <p class="mb-1"><strong>{{ reply.author }}</strong>:</p>
+                <p>{{ reply.text }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="leave-comment mb-5">
+    <h3>Оставьте комментарий</h3>
+    <form action="" method="post">
+      <div class="mb-3">
+        <textarea class="form-control" name="comment" rows="4" placeholder="Введите ваш комментарий"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Отправить</button>
+    </form>
+  </div>
+{% endblock %}
