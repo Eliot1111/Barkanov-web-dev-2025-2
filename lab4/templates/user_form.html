@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% from '_fields.html' import render_field %}
+{% block content %}
+<h1>{{ action }} пользователя</h1>
+<form method="post" novalidate>
+  {{ form.hidden_tag() }}
+  {% if form.login %}
+  {{ render_field(form.login) }}
+{% endif %}
+  {% if form.password %}
+  {{ render_field(form.password) }}
+{% endif %}
+  {{ render_field(form.last_name) }}
+  {{ render_field(form.first_name) }}
+  {{ render_field(form.patronymic) }}
+  {{ render_field(form.role) }}
+  <div class="mt-3">
+    <button type="submit" class="btn btn-success">{{ action }}</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary ms-2">Отмена</a>
+  </div>
+</form>
+{% endblock %}
