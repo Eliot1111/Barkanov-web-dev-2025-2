@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Отчет по страницам</h1>
+<table class="table">
+  <thead><tr><th>№</th><th>Страница</th><th>Количество посещений</th></tr></thead>
+  <tbody>
+    {% for path, count in stats %}
+    <tr><td>{{ loop.index }}</td><td>{{ path }}</td><td>{{ count }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<a href="?export=csv" class="btn btn-primary">Экспорт в CSV</a>
+{% endblock %}
