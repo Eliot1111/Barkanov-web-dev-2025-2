@@ -1,9 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, flash, request
-from extensions import db, login_manager
-from config import Config
-from models import User, Role
-from forms import UserForm, ChangePasswordForm
-from auth import auth
+from lab4.extensions import db, login_manager
+from lab4.config import Config
+from lab4.models import User, Role
+from lab4.forms import UserForm, ChangePasswordForm
+from lab4.auth import auth
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
