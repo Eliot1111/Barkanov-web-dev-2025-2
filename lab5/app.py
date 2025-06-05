@@ -1,11 +1,11 @@
 from flask import Flask
-from config import Config
-from extensions import db, login_manager
-from auth import auth_bp, check_rights
-from logs import logs_bp, log_visit
+from lab5.config import Config
+from lab5.extensions import db, login_manager
+from lab5.auth import auth_bp, check_rights
+from lab5.logs import logs_bp, log_visit
 from werkzeug.security import generate_password_hash
 from flask import render_template
-from models import User
+from lab5.models import User
 
 
 app = Flask(__name__)
