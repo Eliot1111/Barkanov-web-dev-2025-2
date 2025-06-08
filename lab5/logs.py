@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, request, current_app, send_file, flash, redirect, url_for
 from flask_login import current_user, login_required
-from auth import check_rights
+from lab5.auth import check_rights
 from io import StringIO
 import csv
-from models import VisitLog, User
-from extensions import db
+from lab5.models import VisitLog, User
+from lab5.extensions import db
 
 logs_bp = Blueprint('logs', __name__, template_folder='templates/logs')
 
