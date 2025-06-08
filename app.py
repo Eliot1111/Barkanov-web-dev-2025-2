@@ -4,7 +4,7 @@ from lab2.app.app import app as lab2_app
 from lab3.app import app as lab3_app
 from lab4.app import app as lab4_app
 from lab5.app import app as lab5_app
-from lab6.__init__ import create_app as lab6_app
+from lab6.app import create_app as lab6_app
 from root_app.app import app as root_app
 
 
