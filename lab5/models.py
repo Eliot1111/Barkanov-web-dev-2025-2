@@ -1,4 +1,4 @@
-from extensions import db
+from lab5.extensions import db
 from flask_login import UserMixin
 from datetime import datetime
 
