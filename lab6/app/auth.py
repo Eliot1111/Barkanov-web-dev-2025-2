@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import LoginManager, login_user, logout_user, login_required
 
-from app6.app.models import db
-from app6.app.repositories import UserRepository
+from lab6.app.models import db
+from lab6.app.repositories import UserRepository
 
 user_repository = UserRepository(db)
 
