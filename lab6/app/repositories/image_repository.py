@@ -3,7 +3,7 @@ import uuid
 import os
 from werkzeug.utils import secure_filename
 from flask import current_app
-from app.models import Image
+from lab6.app.models import Image
 
 class ImageRepository:
     def __init__(self, db):
