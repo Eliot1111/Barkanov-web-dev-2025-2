@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
-from extensions import db, login_manager
+from lab5.extensions import db, login_manager
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
-from models import User
-from forms import LoginForm, UserForm, ChangePasswordForm
+from lab5.models import User
+from lab5.forms import LoginForm, UserForm, ChangePasswordForm
 
 auth_bp = Blueprint('auth', __name__)
 
