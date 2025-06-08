@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for,
 from flask_login import login_required, current_user
 from sqlalchemy.exc import IntegrityError
 
-from app.models import db
-from app.repositories import CourseRepository, UserRepository, CategoryRepository, ImageRepository
+from lab6.app.models import db
+from lab6.app.repositories import CourseRepository, UserRepository, CategoryRepository, ImageRepository
 
 user_repository = UserRepository(db)
 course_repository = CourseRepository(db)
