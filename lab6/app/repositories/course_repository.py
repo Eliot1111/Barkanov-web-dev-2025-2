@@ -42,7 +42,7 @@ class CourseRepository:
         return Course()
 
     def get_reviews(self, course_id, order='newest', page=1, per_page=5):
-        from app.models import Review
+        from lab6.app.models import Review
 
         query = self.db.select(Review).filter_by(course_id=course_id)
 
@@ -55,7 +55,7 @@ class CourseRepository:
 
         return self.db.paginate(query, page=page, per_page=per_page)
 
-    from app.models import Review
+    from lab6.app.models import Review
 
     def get_user_review(self, course_id, user_id):
         return self.db.session.execute(
