@@ -1,6 +1,6 @@
 import pytest
-from app import app, db
-from models import User
+from lab5.app import app, db
+from lab5.models import User
 from werkzeug.security import generate_password_hash
 
 @pytest.fixture
