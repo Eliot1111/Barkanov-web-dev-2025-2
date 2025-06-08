@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Length, Regexp, EqualTo, ValidationError, Email
-from models import User
+from lab5.models import User
 
 LOGIN_RE = r'^[A-Za-z0-9]{5,}$'
 PWD_RE = r'^.{8,128}$'
