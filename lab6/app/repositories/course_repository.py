@@ -1,5 +1,5 @@
-from app.models import Course
-from app.models import Review
+from lab6.app.models import Course
+from lab6.app.models import Review
 from datetime import datetime
 
 class CourseRepository:
