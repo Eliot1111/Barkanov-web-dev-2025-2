@@ -6,6 +6,7 @@ from lab4.app import app as lab4_app
 from lab5.app import app as lab5_app
 from lab6.app import create_app
 from root_app.app import app as root_app
+from code.app import create_app
 
 lab6_app = create_app() 
 course_work = create_app()
