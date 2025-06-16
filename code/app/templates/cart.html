@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Корзина</h2>
+    {% if cart_items %}
+        <ul class="list-group">
+            {% for item in cart_items %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <h5>{{ item.vm.description }}</h5>
+                    <small>Цена: ${{ item.vm.price }}</small>
+                </div>
+                <div>
+                    <form method="POST" action="{{ url_for('user.cart_delete', id=item.id) }}" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                    </form>
+
+                    <a href="{{ url_for('user.cart_pay', id=item.id) }}" class="btn btn-sm btn-success">Оплатить</a>
+                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#vmDetailsModal{{ item.id }}">
+                        Посмотреть характеристики
+                    </button>
+                </div>
+            </li>
+
+            <!-- Modal с характеристиками -->
+            <div class="modal fade" id="vmDetailsModal{{ item.id }}" tabindex="-1" aria-labelledby="vmDetailsModalLabel{{ item.id }}" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="vmDetailsModalLabel{{ item.id }}">Характеристики ВМ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p><strong>OS:</strong> {{ item.vm.os }}</p>
+                    <p><strong>Описание:</strong> {{ item.vm.description }}</p>
+                    <p><strong>CPU:</strong> {{ item.vm.configuration.cores }} x {{ item.vm.configuration.cpu_freq }} GHz</p>
+                    <p><strong>GPU:</strong> {{ item.vm.configuration.gpu_cores }} cores, {{ item.vm.configuration.cuda }} CUDA</p>
+                    <p><strong>RAM:</strong> {{ item.vm.configuration.ram_mem }} GB @{{ item.vm.configuration.ram_freq }} MHz</p>
+                    <p><strong>Storage:</strong> {{ item.vm.configuration.memory }} GB</p>
+                    <p><strong>Цена:</strong> ${{ item.vm.price }}</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Ваша корзина пуста.</p>
+    {% endif %}
+</div>
+{% endblock %}

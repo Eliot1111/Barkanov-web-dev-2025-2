@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Фильтрация ОС -->
+        <div class="col-md-3">
+            <h5>Фильтрация по ОС</h5>
+            <form method="GET" action="{{ url_for('main.index') }}">
+                {% for os in all_oses %}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="os" value="{{ os }}"
+                           id="os_{{ loop.index }}" {% if os in selected_oses %}checked{% endif %}>
+                    <label class="form-check-label" for="os_{{ loop.index }}">
+                        {{ os }}
+                    </label>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary mt-3">Применить</button>
+            </form>
+        </div>
+
+        <!-- Карточки ВМ -->
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Готовые виртуальные машины</h2>
+                {% if current_user.is_authenticated and not current_user.is_admin %}
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createVMModal">
+                    Создать свою VM
+                </button>
+                {% endif %}
+            </div>
+
+            <div class="row gx-4 gy-4">
+                {% for template in templates %}
+                <div class="col-md-6 col-lg-4 d-flex">
+                    <div class="card shadow-sm flex-fill">
+                        <div class="card-header text-center fw-bold bg-light">
+                            {{ template.os }}
+                        </div>
+                        <div class="ratio ratio-4x3">
+                            <img src="{{ url_for('static', filename='images/' ~ template.photo) }}"
+                                 class="card-img-top object-fit-contain p-2"
+                                 alt="{{ template.os }}">
+                        </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-semibold">{{ template.name }}</h5>
+                            <p class="small text-muted">{{ template.description }}</p>
+                            <p class="mb-1"><strong>OS:</strong> {{ template.os }}</p>
+                            <p class="mb-1"><strong>CPU:</strong> {{ template.cores }} x {{ template.cpu_freq }} GHz</p>
+                            <p class="mb-1"><strong>GPU:</strong> {{ template.gpu_cores }} cores, {{ template.cuda }} CUDA</p>
+                            <p class="mb-1"><strong>RAM:</strong> {{ template.ram_mem }} GB @{{ template.ram_freq }} MHz</p>
+                            <p class="mb-1"><strong>Storage:</strong> {{ template.memory }} GB</p>
+                            {% if template.discount %}
+                                <p class="fw-bold text-danger">Discount: {{ template.discount }}%</p>
+                                <p class="fw-bold text-decoration-line-through text-muted">Price: ${{ template.price }}</p>
+                                <p class="fw-bold text-success">Price with discount: ${{ template.price - (template.price * template.discount // 100) }}</p>
+                            {% else %}
+                                <p class="fw-bold text-primary">Price: ${{ template.price }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer text-center bg-white">
+                            {% if current_user.is_authenticated and current_user.is_admin %}
+                            <button class="btn btn-warning w-100"
+                                    data-bs-toggle="modal" data-bs-target="#editTemplateModal"
+                                    data-id="{{ template.id }}"
+                                    data-name="{{ template.name }}"
+                                    data-description="{{ template.description }}"
+                                    data-os="{{ template.os }}"
+                                    data-photo="{{ template.photo }}"
+                                    data-cores="{{ template.cores }}"
+                                    data-cpu_freq="{{ template.cpu_freq }}"
+                                    data-gpu_cores="{{ template.gpu_cores }}"
+                                    data-cuda="{{ template.cuda }}"
+                                    data-gpu_freq="{{ template.gpu_freq }}"
+                                    data-ram_mem="{{ template.ram_mem }}"
+                                    data-ram_freq="{{ template.ram_freq }}"
+                                    data-memory="{{ template.memory }}"
+                                    data-price="{{ template.price }}"
+                                    data-discount="{{ template.discount }}">
+                                 Редактировать
+                            </button>
+                            {% elif current_user.is_authenticated %}
+                            <form method="POST" action="{{ url_for('user.add_to_cart', template_id=template.id) }}">
+                                <button type="submit" class="btn btn-primary w-100">Добавить в корзину</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Редактирования -->
+{% if current_user.is_authenticated and current_user.is_admin %}
+<div class="modal fade" id="editTemplateModal" tabindex="-1" aria-labelledby="editTemplateModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('admin.edit_template') }}">
+        <div class="modal-header">
+          <h5 class="modal-title">Редактировать шаблон</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="id" id="templateId">
+          <div class="row g-2">
+            <div class="col-md-6"><label class="form-label">Название</label><input type="text" name="name" id="templateName" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">ОС</label><input type="text" name="os" id="templateOs" class="form-control"></div>
+            <div class="col-md-12"><label class="form-label">Описание</label><input type="text" name="description" id="templateDescription" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Фото</label><input type="text" name="photo" id="templatePhoto" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">CPU ядра</label><input type="number" name="cores" id="templateCores" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">CPU частота</label><input type="number" name="cpu_freq" id="templateCpuFreq" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">GPU ядра</label><input type="number" name="gpu_cores" id="templateGpuCores" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">CUDA</label><input type="number" name="cuda" id="templateCuda" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">GPU частота</label><input type="number" name="gpu_freq" id="templateGpuFreq" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">RAM (GB)</label><input type="number" name="ram_mem" id="templateRamMem" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">RAM частота</label><input type="number" name="ram_freq" id="templateRamFreq" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Диск (GB)</label><input type="number" name="memory" id="templateMemory" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Цена</label><input type="number" name="price" id="templatePrice" class="form-control"></div>
+            <div class="col-md-4"><label class="form-label">Скидка (%)</label><input type="number" name="discount" id="templateDiscount" class="form-control"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary w-100">Сохранить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Modal Создания VM -->
+{% if current_user.is_authenticated and not current_user.is_admin %}
+<div class="modal fade" id="createVMModal" tabindex="-1" aria-labelledby="createVMModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('user.create_vm') }}">
+        <div class="modal-header">
+          <h5 class="modal-title">Создать свою виртуальную машину</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+
+          <select name="os" class="form-select mb-2" required>
+            <option disabled selected value="">Выберите ОС</option>
+            <option value="Linux">Linux</option>
+            <option value="Windows">Windows</option>
+            <option value="MacOS">MacOS</option>
+          </select>
+
+          <input type="text" name="description" class="form-control mb-2" placeholder="Описание">
+          <input type="number" name="cores" class="form-control mb-2" placeholder="CPU ядра" >
+          <input type="number" step="0.1" name="cpu_freq" class="form-control mb-2" placeholder="CPU частота (ГГц)" required>
+          <input type="number" name="gpu_cores" class="form-control mb-2" placeholder="GPU ядра">
+          <input type="number" name="cuda" class="form-control mb-2" placeholder="CUDA">
+          <input type="number" step="0.1" name="gpu_freq" class="form-control mb-2" placeholder="GPU частота">
+          <input type="number" name="ram_mem" class="form-control mb-2" placeholder="RAM (GB)">
+          <input type="number" name="ram_freq" class="form-control mb-2" placeholder="RAM частота">
+          <input type="number" name="memory" class="form-control mb-2" placeholder="Диск (GB)">
+
+          <div id="service-container">
+              <label class="form-label">Микросервисы</label>
+              <div class="input-group mb-2">
+                <select name="services" class="form-select">
+                  <option disabled selected value="">Выберите сервис</option>
+                  <option value="Prometheus">Prometheus</option>
+                  <option value="Grafana">Grafana</option>
+                  <option value="Zabbix">Zabbix</option>
+                  <option value="MySQL">MySQL</option>
+                  <option value="PostgreSQL">PostgreSQL</option>
+                  <option value="nginx">nginx</option>
+                  <option value="apache">apache</option>
+                  <option value="ELK stack">ELK stack</option>
+                </select>
+              </div>
+          </div>
+          <button type="button" class="btn btn-secondary mb-3" onclick="addServiceInput()">+ Добавить сервис</button>
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success w-100">Создать</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+<script>
+  const editTemplateModal = document.getElementById('editTemplateModal')
+  if (editTemplateModal) {
+    editTemplateModal.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget
+      document.getElementById('templateId').value = button.getAttribute('data-id')
+      document.getElementById('templateName').value = button.getAttribute('data-name')
+      document.getElementById('templateOs').value = button.getAttribute('data-os')
+      document.getElementById('templateDescription').value = button.getAttribute('data-description')
+      document.getElementById('templatePhoto').value = button.getAttribute('data-photo')
+      document.getElementById('templateCores').value = button.getAttribute('data-cores')
+      document.getElementById('templateCpuFreq').value = button.getAttribute('data-cpu_freq')
+      document.getElementById('templateGpuCores').value = button.getAttribute('data-gpu_cores')
+      document.getElementById('templateCuda').value = button.getAttribute('data-cuda')
+      document.getElementById('templateGpuFreq').value = button.getAttribute('data-gpu_freq')
+      document.getElementById('templateRamMem').value = button.getAttribute('data-ram_mem')
+      document.getElementById('templateRamFreq').value = button.getAttribute('data-ram_freq')
+      document.getElementById('templateMemory').value = button.getAttribute('data-memory')
+      document.getElementById('templatePrice').value = button.getAttribute('data-price')
+      document.getElementById('templateDiscount').value = button.getAttribute('data-discount')
+    })
+  }
+
+  function addServiceInput() {
+    const container = document.getElementById('service-container');
+    const newInput = document.createElement('div');
+    newInput.classList.add('input-group', 'mb-2');
+    newInput.innerHTML = `
+      <select name="services" class="form-select">
+        <option disabled selected value="">Выберите сервис</option>
+        <option value="Prometheus">Prometheus</option>
+        <option value="Grafana">Grafana</option>
+        <option value="Zabbix">Zabbix</option>
+        <option value="MySQL">MySQL</option>
+        <option value="PostgreSQL">PostgreSQL</option>
+        <option value="nginx">nginx</option>
+        <option value="apache">apache</option>
+        <option value="ELK stack">ELK stack</option>
+      </select>
+    `;
+    container.appendChild(newInput);
+  }
+</script>
+{% endblock %}
+

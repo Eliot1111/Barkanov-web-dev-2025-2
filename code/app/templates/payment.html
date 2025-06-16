@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Оплата{% endblock %}
+{% block content %}
+<h2 class="mb-4">Оплата виртуальной машины</h2>
+<div class="card shadow">
+    <div class="card-body">
+        <p><strong>ID VM:</strong> {{ item.vm.id }}</p>
+        <p><strong>Описание:</strong> {{ item.vm.description }}</p>
+        <p><strong>Цена:</strong> ${{ item.vm.price }}</p>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="payment_info" class="form-label">Данные для оплаты</label>
+                <input type="text" name="payment_info" id="payment_info" class="form-control" placeholder="Введите данные платежа">
+            </div>
+            <button type="submit" class="btn btn-success">Оплатить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

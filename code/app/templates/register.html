@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow-lg" style="min-width: 400px; max-width: 550px; padding: 30px;">
+        <h2 class="text-center mb-4">Регистрация</h2>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="mb-3">
+                {{ form.username.label(class="form-label") }}
+                {{ form.username(class="form-control form-control-lg") }}
+            </div>
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control form-control-lg") }}
+            </div>
+            <div class="mb-3">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control form-control-lg") }}
+            </div>
+            <div class="mb-3">
+                {{ form.confirm.label(class="form-label") }}
+                {{ form.confirm(class="form-control form-control-lg") }}
+            </div>
+            <button type="submit" class="btn btn-success w-100 btn-lg">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Создать шаблон виртуальной машины</h2>
+    <form method="POST" action="{{ url_for('admin.create_template') }}">
+        {{ form.hidden_tag() }}
+
+        <div class="row g-2">
+            <div class="col-md-6">
+                <label class="form-label">Название</label>
+                <input type="text" class="form-control" name="name" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">ОС</label>
+                <select class="form-select" name="os" id="osSelect" required onchange="updatePhoto()">
+                    <option value="">Выберите ОС</option>
+                    <option value="Windows">Windows</option>
+                    <option value="Linux">Linux</option>
+                    <option value="MacOS">MacOS</option>
+                </select>
+            </div>
+
+            <div class="col-md-12">
+                <label class="form-label">Описание</label>
+                <textarea class="form-control" name="description"></textarea>
+            </div>
+
+            <!-- Скрытое поле фото -->
+            <input type="hidden" name="photo" id="photoInput">
+
+            <div class="col-md-3">
+                <label class="form-label">CPU ядра</label>
+                <input type="number" class="form-control" name="cores">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">CPU частота (ГГц)</label>
+                <input type="number" step="0.1" class="form-control" name="cpu_freq">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">GPU ядра</label>
+                <input type="number" class="form-control" name="gpu_cores">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">CUDA</label>
+                <input type="number" class="form-control" name="cuda">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">GPU частота</label>
+                <input type="number" step="0.1" class="form-control" name="gpu_freq">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">RAM (GB)</label>
+                <input type="number" class="form-control" name="ram_mem">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">RAM частота</label>
+                <input type="number" class="form-control" name="ram_freq">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Диск (GB)</label>
+                <input type="number" class="form-control" name="memory">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Цена ($)</label>
+                <input type="number" class="form-control" name="price">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Скидка (%)</label>
+                <input type="number" class="form-control" name="discount" min="0" max="100">
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Контейнер для сервисов -->
+        <div id="service-container">
+            <label class="form-label">Микросервисы</label>
+            <div class="input-group mb-2">
+                <select class="form-select" name="services">
+                    <option value="Prometheus">Prometheus</option>
+                    <option value="Grafana">Grafana</option>
+                    <option value="Zabbix">Zabbix</option>
+                    <option value="MySQL">MySQL</option>
+                    <option value="PostgreSQL">PostgreSQL</option>
+                    <option value="nginx">nginx</option>
+                    <option value="apache">apache</option>
+                    <option value="ELK stack">ELK stack</option>
+                </select>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary mb-3" onclick="addServiceSelect()">+ Добавить сервис</button>
+        <button type="submit" class="btn btn-primary w-100">Создать шаблон</button>
+    </form>
+</div>
+
+<script>
+function updatePhoto() {
+    const osSelect = document.getElementById('osSelect');
+    const photoInput = document.getElementById('photoInput');
+    const selectedOS = osSelect.value.toLowerCase();
+
+    let filename = '';
+    if (selectedOS === 'windows') filename = 'windows.png';
+    else if (selectedOS === 'linux') filename = 'linux.png';
+    else if (selectedOS === 'macos') filename = 'apple.png';
+
+    photoInput.value = filename;
+}
+
+function addServiceSelect() {
+    const container = document.getElementById('service-container');
+    const newGroup = document.createElement('div');
+    newGroup.classList.add('input-group', 'mb-2');
+
+    newGroup.innerHTML = `
+        <select class="form-select" name="services">
+            <option value="Prometheus">Prometheus</option>
+            <option value="Grafana">Grafana</option>
+            <option value="Zabbix">Zabbix</option>
+            <option value="MySQL">MySQL</option>
+            <option value="PostgreSQL">PostgreSQL</option>
+            <option value="nginx">nginx</option>
+            <option value="apache">apache</option>
+            <option value="ELK stack">ELK stack</option>
+        </select>
+    `;
+    container.appendChild(newGroup);
+}
+</script>
+{% endblock %}

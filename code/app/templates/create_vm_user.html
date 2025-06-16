@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Создать свою виртуальную машину</h2>
+    <form method="POST" action="{{ url_for('user.create_vm') }}">
+
+        <div class="row g-2">
+            <div class="col-md-6">
+                <label class="form-label">Название</label>
+                <input type="text" class="form-control" name="name" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">ОС</label>
+                <select class="form-select" name="os" id="os-select" required onchange="updatePreviewByOS()">
+                    <option value="" disabled selected>Выберите ОС</option>
+                    <option value="Windows">Windows</option>
+                    <option value="Linux">Linux</option>
+                    <option value="MacOS">MacOS</option>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <label class="form-label">Описание</label>
+                <textarea class="form-control" name="description"></textarea>
+            </div>
+
+            <!-- Превью по выбору ОС -->
+            <div class="col-md-6">
+                <label class="form-label">Превью ОС</label>
+                <div>
+                    <img id="os-preview" src="" alt="OS Preview" class="img-fluid rounded border p-2" style="max-height: 200px;">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">CPU ядра</label>
+                <input type="number" class="form-control" name="cores">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">CPU частота (ГГц)</label>
+                <input type="number" step="0.1" class="form-control" name="cpu_freq">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">GPU ядра</label>
+                <input type="number" class="form-control" name="gpu_cores">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">CUDA</label>
+                <input type="number" class="form-control" name="cuda">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">GPU частота</label>
+                <input type="number" step="0.1" class="form-control" name="gpu_freq">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">RAM (GB)</label>
+                <input type="number" class="form-control" name="ram_mem">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">RAM частота</label>
+                <input type="number" class="form-control" name="ram_freq">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Диск (GB)</label>
+                <input type="number" class="form-control" name="memory">
+            </div>
+        </div>
+
+        <hr>
+
+        <div id="service-container">
+            <label class="form-label">Микросервисы</label>
+            <div class="input-group mb-2">
+                <select class="form-select" name="services">
+                    <option value="" disabled selected>Выберите сервис</option>
+                    <option value="Prometheus">Prometheus</option>
+                    <option value="Grafana">Grafana</option>
+                    <option value="Zabbix">Zabbix</option>
+                    <option value="MySQL">MySQL</option>
+                    <option value="PostgreSQL">PostgreSQL</option>
+                    <option value="nginx">nginx</option>
+                    <option value="apache">apache</option>
+                    <option value="ELK stack">ELK stack</option>
+                </select>
+            </div>
+        </div>
+        <button type="button" class="btn btn-secondary mb-3" onclick="addServiceInput()">+ Добавить сервис</button>
+
+        <button type="submit" class="btn btn-success w-100">Создать машину</button>
+    </form>
+</div>
+
+<script>
+function addServiceInput() {
+    const container = document.getElementById('service-container');
+    const newInput = document.createElement('div');
+    newInput.classList.add('input-group', 'mb-2');
+    newInput.innerHTML = `
+        <select class="form-select" name="services">
+            <option value="" disabled selected>Выберите сервис</option>
+            <option value="Prometheus">Prometheus</option>
+            <option value="Grafana">Grafana</option>
+            <option value="Zabbix">Zabbix</option>
+            <option value="MySQL">MySQL</option>
+            <option value="PostgreSQL">PostgreSQL</option>
+            <option value="nginx">nginx</option>
+            <option value="apache">apache</option>
+            <option value="ELK stack">ELK stack</option>
+        </select>
+    `;
+    container.appendChild(newInput);
+}
+
+function updatePreviewByOS() {
+    const osSelect = document.getElementById('os-select');
+    const preview = document.getElementById('os-preview');
+    const value = osSelect.value.toLowerCase();
+
+    if (value === 'windows') {
+        preview.src = '/static/images/windows.png';
+    } else if (value === 'linux') {
+        preview.src = '/static/images/linux.png';
+    } else if (value === 'macos') {
+        preview.src = '/static/images/apple.png';
+    } else {
+        preview.src = '';
+    }
+}
+</script>
+{% endblock %}
